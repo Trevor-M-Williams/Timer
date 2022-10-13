@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timer</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: "Helvetica";
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 80px;
+        width: 300px;
+        border: 1px solid black;
+      }
+      .controls {
+        display: flex;
+      }
+      .start-stop,
+      .reset {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        margin: 0 5px;
+        cursor: pointer;
+      }
+      .start-stop {
+        background-color: green;
+      }
+      .timer {
+        margin-right: 5px;
+        font-size: 48px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="controls">
+        <div class="start-stop"></div>
+        <div class="reset"></div>
+      </div>
+      <div class="timer">00:00</div>
+    </div>
+
+    <script>
+      // get timer value from local storage
+      // use href to get unique value?
+      // might not work if in an iframe
+
+      let href = window.location.href;
+      let timerStarted = false;
+      let interval;
+
+      let val = localStorage.getItem(`timer`);
+      if (val) val = parseInt(val);
+      else val = 0;
+
+      let startStopButton = document.querySelector(".start-stop");
+      let timer = document.querySelector(".timer");
+
+      timer.textContent = (val / 10).toString().slice(0, -2);
+
+      startStopButton.addEventListener("click", handleTimer);
+
+      function handleTimer() {
+        if (!timerStarted) {
+          timerStarted = true;
+          startStopButton.style.backgroundColor = "red";
+          if (!interval) {
+            interval = setInterval(() => {
+              val += 1;
+              timer.textContent = (val / 10).toString().slice(0, -2);
+              localStorage.setItem(`timer`, val);
+            }, 100);
+          }
+        } else {
+          timerStarted = false;
+          startStopButton.style.backgroundColor = "green";
+          clearInterval(interval);
+          interval = null;
+        }
+      }
+    </script>
+  </body>
+</html>
